@@ -1,0 +1,31 @@
+# Xcode
+.DS_Store
+build/
+DerivedData/
+*.storyboardc
+*.apn
+*.hmap
+*.xccheckout
+*.xcresult
+*.xcuserstate
+
+# Bundle artifacts
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Cocoapods
+# Pods/
+
+# Swift Package Manager
+.build/
+
+# Carthage
+# Carthage/Build/
+
+# Accidental Binaries & Frameworks
+*.xcframework
+*.framework
+*.a
+*.o
+*.dylib
