@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>A fully offline voice memo app with AI-powered transcription</strong>
+  <strong>A fully offline voice memo app with AI-powered transcription for Android & iOS</strong>
 </p>
 
 <p align="center">
@@ -25,7 +25,7 @@
 - **🤖 AI Transcription** - Powered by [whisper.cpp](https://github.com/ggerganov/whisper.cpp), OpenAI's Whisper model running locally.
 - **⚡ Real-time Recording** - Clean, modern UI for recording voice memos.
 - **📝 Auto-generated Titles** - Transcriptions automatically generate note titles.
-- **🎨 Material 3 Design** - Modern Android design with Material You theming.
+- **🎨 Modern Design** - Material 3 (Android) and Liquid Glass (iOS) designs.
 - **📤 Share Audio** - Export and share your recordings via any app.
 - **🌐 Multi-language** - Transcription supports multiple languages.
 
@@ -43,7 +43,7 @@
 
 ```
 offline_audionotes/
-├── android_app/          # Main Android application
+├── android_app/          # Android application (Kotlin + Compose)
 │   ├── app/
 │   │   ├── src/main/
 │   │   │   ├── cpp/      # JNI bindings for whisper.cpp
@@ -51,6 +51,10 @@ offline_audionotes/
 │   │   │   └── res/      # Android resources
 │   │   └── build.gradle.kts
 │   └── gradle/
+├── ios_app/              # iOS application (Swift + SwiftUI)
+│   ├── OfflineAudioNotes/
+│   ├── OfflineAudioNotes.xcodeproj
+│   └── ThirdParty/       # whisper.cpp xcframework
 ├── whisper.cpp/          # Whisper.cpp library (git submodule)
 └── README.md
 ```
@@ -97,11 +101,18 @@ wget https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin
 
 Place the model in the app's files directory or let the app download it.
 
-### Build
+### Build (Android)
 
 1. Open `android_app/` in Android Studio
 2. Sync Gradle
 3. Build and run on device/emulator (min SDK 26)
+
+### Build (iOS)
+
+1. Open `ios_app/OfflineAudioNotes.xcodeproj` in Xcode
+2. Init submodule: `git submodule update --init --recursive`
+3. Ensure `whisper.xcframework` is linked in Build Phases
+4. Build and run on iPhone/Simulator (iOS 17+)
 
 ---
 
@@ -113,6 +124,12 @@ Place the model in the app's files directory or let the app download it.
 - **Target SDK**: 36 (Android 16)
 - **UI**: XML Views + Jetpack Compose (hybrid)
 - **Architecture**: Single-activity with ViewModel
+
+### iOS
+- **Language**: Swift 5.10
+- **Min Target**: iOS 17.0
+- **UI**: SwiftUI
+- **Architecture**: MVVM
 
 ### Libraries
 
