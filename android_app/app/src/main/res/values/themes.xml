@@ -1,0 +1,38 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+        LIGHT THEME ONLY - Offline AudioNotes
+        
+        Color Palette Assignments:
+        - Primary: #90f1ef (accent_cyan) - Main brand color, FAB, primary actions
+        - Secondary: #ffd6e0 (accent_pink) - Secondary accents, highlights
+        - Surface/Background: #FFFFFF (white) - All surfaces are pure white
+        - Accent variants:
+          - #ffef9f (accent_yellow) - Available for warnings/highlights
+          - #c1fba4 (accent_lime) - Available for success states
+          - #7bf1a8 (accent_green) - Primary variant, active states
+        
+        Rationale: Cyan chosen as primary for its calming, modern feel suitable for a notes app.
+        Pink as secondary provides warm contrast. All other accents reserved for specific UI states.
+    -->
+    <style name="Theme.OfflineAudioNotes" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color: accent_cyan (#90f1ef) -->
+        <item name="colorPrimary">@color/accent_cyan</item>
+        <item name="colorPrimaryVariant">@color/accent_green</item>
+        <item name="colorOnPrimary">@color/text_primary</item>
+        <!-- Secondary brand color: accent_pink (#ffd6e0) -->
+        <item name="colorSecondary">@color/accent_pink</item>
+        <item name="colorSecondaryVariant">@color/accent_lime</item>
+        <item name="colorOnSecondary">@color/text_primary</item>
+        <!-- Surface and background: pure white -->
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <!-- Status bar: white with dark icons -->
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- Navigation bar: white with dark icons -->
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

@@ -1,0 +1,24 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- LIGHT THEME ONLY - Same as values/themes.xml (no dark mode per workspace rules) -->
+    <style name="Theme.OfflineAudioNotes" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color: accent_cyan (#90f1ef) -->
+        <item name="colorPrimary">@color/accent_cyan</item>
+        <item name="colorPrimaryVariant">@color/accent_green</item>
+        <item name="colorOnPrimary">@color/text_primary</item>
+        <!-- Secondary brand color: accent_pink (#ffd6e0) -->
+        <item name="colorSecondary">@color/accent_pink</item>
+        <item name="colorSecondaryVariant">@color/accent_lime</item>
+        <item name="colorOnSecondary">@color/text_primary</item>
+        <!-- Surface and background: pure white -->
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <!-- Status bar: white with dark icons -->
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- Navigation bar: white with dark icons -->
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

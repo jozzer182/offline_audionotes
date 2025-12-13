@@ -1,0 +1,107 @@
+# ===== Android =====
+# Gradle files
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration file (contains sdk.dir)
+local.properties
+
+# Android Studio
+.idea/
+*.iml
+.DS_Store
+
+# Generated files
+*.apk
+*.aab
+*.dex
+*.class
+
+# Log files
+*.log
+
+# Native build
+.externalNativeBuild/
+.cxx/
+
+# Captures
+/captures
+
+# Keystore files - NEVER commit these
+*.keystore
+*.jks
+keystore.properties
+
+# ===== IDE =====
+# IntelliJ IDEA / Android Studio
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/libraries
+.idea/modules.xml
+.idea/caches
+.idea/vcs.xml
+
+# VS Code
+.vscode/
+
+# Windsurf
+.windsurf/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ===== Kotlin =====
+.kotlin/
+
+# ===== C++ / Native =====
+# Object files
+*.o
+*.obj
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects
+*.so
+*.so.*
+*.dylib
+*.dll
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# ===== whisper.cpp =====
+# If whisper.cpp is a submodule, keep it
+# If cloned separately, exclude build artifacts
+whisper.cpp/build/
+whisper.cpp/.cxx/
+
+# ===== Models =====
+# Large model files should not be in repo
+*.bin
+*.pt
+*.onnx
+models/
+
+# ===== Misc =====
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
+
+# Test outputs
+test-results/
