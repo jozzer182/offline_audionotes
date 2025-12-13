@@ -7,6 +7,10 @@ build/
 # Local configuration file (contains sdk.dir)
 local.properties
 
+# Environment variables (credentials)
+.env
+.env.local
+
 # Android Studio
 .idea/
 *.iml
