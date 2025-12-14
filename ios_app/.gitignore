@@ -9,6 +9,10 @@ DerivedData/
 *.xcresult
 *.xcuserstate
 
+# User-specific Xcode data (NEVER commit)
+xcuserdata/
+*.xcuserdatad/
+
 # Bundle artifacts
 *.ipa
 *.dSYM.zip
