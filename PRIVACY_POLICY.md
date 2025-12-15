@@ -30,8 +30,8 @@ All data created by the app remains **exclusively on your device**:
 | Data Type | Storage Location | Shared? |
 |-----------|------------------|---------|
 | Voice recordings | App's private storage | No |
-| Transcriptions | Local SQLite database | No |
-| App settings | SharedPreferences | No |
+| Transcriptions | Local database | No |
+| App settings | Local storage | No |
 | AI Model | App's files directory | No |
 
 ---
@@ -53,9 +53,9 @@ The app requests the following permissions:
 
 | Permission | Purpose | Required? |
 |------------|---------|-----------|
-| `RECORD_AUDIO` | Record voice memos | Yes |
-| `POST_NOTIFICATIONS` | Show transcription progress | Optional |
-| `FOREGROUND_SERVICE` | Background transcription | Yes |
+| Microphone | Record voice memos | Yes |
+| Notifications | Show transcription progress | Optional |
+| Background Processing | Background transcription | Yes |
 
 We only request permissions necessary for core functionality.
 
@@ -98,7 +98,7 @@ We may update this Privacy Policy from time to time. Changes will be reflected i
 
 This app is open source. You can review the complete source code to verify our privacy practices:
 
-🔗 [GitHub Repository](https://github.com/YOUR_USERNAME/offline-audionotes)
+🔗 [GitHub Repository](https://github.com/jozzer182/offline_audionotes)
 
 ---
 
