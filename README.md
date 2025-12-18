@@ -1,7 +1,7 @@
 # 🎙️ Offline Audio Notes
 
 <p align="center">
-  <img src="android_app/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" width="120" alt="App Icon"/>
+  <img src="icons/iOS/Icon-180.png" width="120" alt="App Icon"/>
 </p>
 
 <p align="center">
@@ -15,6 +15,20 @@
   <a href="#setup">Setup</a> •
   <a href="#tech-stack">Tech Stack</a> •
   <a href="#license">License</a>
+</p>
+
+---
+
+## 📲 Download
+
+<p align="center">
+  <a href="https://apps.apple.com/us/app/offline-audio-notes/id6756551299">
+    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" height="50" alt="Download on the App Store"/>
+  </a>
+  &nbsp;&nbsp;
+  <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" height="50" alt="Get it on Google Play" style="opacity: 0.5"/>
+  <br/>
+  <sub>Android version coming soon</sub>
 </p>
 
 ---
