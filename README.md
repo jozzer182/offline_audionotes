@@ -43,23 +43,31 @@
 
 ```
 offline_audionotes/
-├── android_app/          # Android application (Kotlin + Compose)
+├── android_app/              # Android application (Kotlin + Compose)
 │   ├── app/
 │   │   ├── src/main/
-│   │   │   ├── cpp/      # JNI bindings for whisper.cpp
-│   │   │   ├── java/     # Kotlin source code
-│   │   │   └── res/      # Android resources
+│   │   │   ├── cpp/          # JNI bindings for whisper.cpp
+│   │   │   ├── java/         # Kotlin source code
+│   │   │   └── res/          # Android resources
 │   │   └── build.gradle.kts
 │   └── gradle/
-├── ios_app/              # iOS application (Swift + SwiftUI)
+├── ios_app/                  # iOS application (Swift + SwiftUI)
 │   ├── OfflineAudioNotes/
-│   ├── OfflineAudioNotes.xcodeproj
-│   └── ThirdParty/       # whisper.cpp xcframework
-├── whisper.cpp/          # Whisper.cpp library (git submodule)
+│   │   ├── App/              # App entry point
+│   │   ├── Data/             # Repositories implementation
+│   │   ├── Domain/           # Models & Services interfaces
+│   │   ├── Services/         # Audio, Transcription, Background tasks
+│   │   ├── UI/               # Screens, Components, Theme
+│   │   ├── Utils/            # Helper utilities
+│   │   └── whisper.xcframework
+│   └── ThirdParty/           # External dependencies
+├── whisper.cpp/              # Whisper.cpp library (git submodule)
+├── screenshots_appstore/     # iOS App Store screenshots
+├── screenshots_playstore/    # Android Play Store screenshots
 └── README.md
 ```
 
-### Key Components
+### Key Components - Android
 
 | Component | Description |
 |-----------|-------------|
@@ -69,6 +77,17 @@ offline_audionotes/
 | **TranscribeNoteWorker** | Background transcription using WorkManager |
 | **WhisperBridge** | JNI bridge to whisper.cpp native library |
 | **Room Database** | Local persistence for notes |
+
+### Key Components - iOS
+
+| Component | Description |
+|-----------|-------------|
+| **NoteListView** | Main screen with SwiftUI List |
+| **NoteDetailView** | View/edit notes with audio playback |
+| **AudioPlayerView** | SwiftUI audio player component |
+| **BackgroundTranscriptionCoordinator** | Background transcription using BGProcessingTask |
+| **WhisperBridge** | Swift bridge to whisper.xcframework |
+| **SwiftData** | Local persistence for notes |
 
 ---
 
@@ -131,7 +150,7 @@ Place the model in the app's files directory or let the app download it.
 - **UI**: SwiftUI
 - **Architecture**: MVVM
 
-### Libraries
+### Libraries - Android
 
 | Library | Purpose |
 |---------|---------|
@@ -140,6 +159,16 @@ Place the model in the app's files directory or let the app download it.
 | Room | Local database |
 | WorkManager | Background transcription |
 | Coroutines | Asynchronous programming |
+
+### Libraries - iOS
+
+| Library | Purpose |
+|---------|---------|
+| SwiftUI | Declarative UI framework |
+| SwiftData | Persistence framework |
+| AVFoundation | Audio recording and playback |
+| BackgroundTasks | Background processing |
+| Combine | Reactive programming |
 
 ### Native
 
@@ -152,6 +181,8 @@ Place the model in the app's files directory or let the app download it.
 ---
 
 ## 📂 Project Structure
+
+### Android
 
 ```
 android_app/app/src/main/
@@ -177,21 +208,67 @@ android_app/app/src/main/
     └── drawable/               # Icons and graphics
 ```
 
+### iOS
+
+```
+ios_app/OfflineAudioNotes/OfflineAudioNotes/
+├── App/
+│   └── OfflineAudioNotesApp.swift  # App entry point
+├── Data/
+│   └── Repositories/           # Repository implementations
+├── Domain/
+│   ├── Models/                 # Data models (Note, etc.)
+│   ├── Repositories/           # Repository protocols
+│   └── Services/               # Service interfaces
+├── Services/
+│   ├── Audio/                  # Audio recording & playback
+│   ├── Background/             # Background task handling
+│   ├── Sharing/                # Share functionality
+│   └── Transcription/          # Whisper transcription service
+│       ├── WhisperBridge.swift
+│       └── WhisperModelManager.swift
+├── UI/
+│   ├── Assets.xcassets/        # Images & colors
+│   ├── Components/             # Reusable SwiftUI views
+│   ├── Screens/                # NoteList, NoteDetail views
+│   └── Theme/                  # App styling
+└── Utils/                      # Helper utilities
+```
+
 ---
 
 ## 🔧 Configuration
 
-### Foreground Service (Android 14+)
+### Android
+
+#### Foreground Service (Android 14+)
 
 The app uses a foreground service for transcription. For Android 14+ compatibility, the service declares `foregroundServiceType="dataSync"`.
 
-### Permissions
+#### Permissions
 
 ```xml
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+```
+
+### iOS
+
+#### Background Transcription (iOS 17+)
+
+The app uses `BGProcessingTask` for background transcription when the app is not active.
+
+#### Permissions (Info.plist)
+
+```xml
+<key>NSMicrophoneUsageDescription</key>
+<string>We need access to your microphone to record voice notes.</string>
+<key>BGTaskSchedulerPermittedIdentifiers</key>
+<array>
+    <string>com.yourcompany.offlineaudionotes.transcription</string>
+</array>
 ```
 
 ---
