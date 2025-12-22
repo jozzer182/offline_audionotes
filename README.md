@@ -115,14 +115,6 @@
     <td align="center"><img src="media/screenshots/ios_2.png" width="180" alt="iOS Recording"/></td>
     <td align="center"><img src="media/screenshots/ios_3.png" width="180" alt="iOS Note Detail"/></td>
   </tr>
-  <tr>
-    <td align="center"><sub>Notes List</sub></td>
-    <td align="center"><sub>Recording</sub></td>
-    <td align="center"><sub>Note Detail</sub></td>
-    <td align="center"><sub>Notes List</sub></td>
-    <td align="center"><sub>Recording</sub></td>
-    <td align="center"><sub>Note Detail</sub></td>
-  </tr>
 </table>
 
 ---
