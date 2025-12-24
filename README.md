@@ -26,9 +26,9 @@
     <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" height="50" alt="Download on the App Store"/>
   </a>
   &nbsp;&nbsp;
-  <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" height="50" alt="Get it on Google Play" style="opacity: 0.5"/>
-  <br/>
-  <sub>Android version coming soon</sub>
+  <a href="https://play.google.com/store/apps/details?id=com.zarabandajose.offlineaudionotes">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" height="50" alt="Get it on Google Play"/>
+  </a>
 </p>
 
 ---
@@ -125,14 +125,16 @@ cd offline-audionotes
 
 ### Download Whisper Model
 
-The app uses the `ggml-tiny.bin` model. You can download it automatically on first run, or manually:
+The app uses the `ggml-base.bin` model for multilingual support. You can download it from:
 
 ```bash
-# Download tiny model (75MB)
-wget https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin
+# Download base model (148MB) - Recommended for Spanish and other languages
+wget https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin
 ```
 
-Place the model in the app's files directory or let the app download it.
+Place the model in `android_app/app/src/main/assets/models/` or let the app download it.
+
+> **Note:** The base model provides good accuracy for Spanish and other languages. For English-only use, you can use the smaller `ggml-tiny.bin` (75MB).
 
 ### Build (Android)
 
@@ -296,6 +298,21 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+---
+
+## 📋 Changelog
+
+### v1.1.0 (December 2024)
+- 🌐 **Improved Multilingual Support** - Upgraded from `ggml-tiny.bin` to `ggml-base.bin` model
+- 🇪🇸 **Better Spanish Transcription** - Fixed issue where Spanish audio was incorrectly transcribed
+- ⚡ **Performance Optimizations**
+
+### v1.0.0 (December 2024)
+- 🎉 Initial release
+- 🎙️ Voice memo recording
+- 🤖 Offline AI transcription with whisper.cpp
+- 📱 Android & iOS support
 
 ---
 
