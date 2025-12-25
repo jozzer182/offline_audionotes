@@ -18,6 +18,7 @@ import com.zarabandajose.offlineaudionotes.domain.model.TranscriptionStatus
 import com.zarabandajose.offlineaudionotes.stt.WhisperBridge
 import com.zarabandajose.offlineaudionotes.stt.WhisperModelManager
 import com.zarabandajose.offlineaudionotes.ui.NoteDetailActivity
+import com.zarabandajose.offlineaudionotes.audio.AudioPreprocessor
 import java.io.File
 
 /**
@@ -101,7 +102,10 @@ class TranscribeNoteWorker(
                 return Result.failure(workDataOf("error" to error))
             }
 
-            val result = WhisperBridge.transcribeFile(modelPath, audioPath, language)
+            // Preprocess audio for better transcription (normalize volume if needed)
+            val processedAudioPath = AudioPreprocessor.normalizeIfNeeded(audioPath)
+
+            val result = WhisperBridge.transcribeFile(modelPath, processedAudioPath, language)
 
             if (isStopped) {
                 Log.d(TAG, "Worker was stopped/cancelled for note $noteId")

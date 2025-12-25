@@ -285,6 +285,31 @@ wget https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin
 
 ---
 
+<h2 id="audio-preprocessing">🔊 Audio Preprocessing</h2>
+
+The app includes intelligent audio preprocessing to improve transcription accuracy for quiet recordings.
+
+```mermaid
+flowchart TD
+    A[🎙️ Audio Recording] --> B{Peak < 50%?}
+    B -->|No| C[✅ Use Original]
+    B -->|Yes| D[📊 Calculate Gain]
+    D --> E[🔊 Apply Gain 1.2x-10x]
+    E --> F[💾 Save Normalized File]
+    F --> G[🤖 Transcribe]
+    C --> G
+```
+
+**How it works:**
+1. **Analyzes** the WAV file to find peak amplitude
+2. **Skips** if volume is already adequate (≥50% of max)
+3. **Normalizes** quiet audio to 90% peak (with max 10x gain to prevent noise amplification)
+4. **Saves** normalized audio as `*_normalized.wav` for transcription
+
+> This feature automatically enhances low-volume recordings without any user intervention.
+
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -306,6 +331,10 @@ git push origin feature/AmazingFeature
 ---
 
 ## 📋 Changelog
+
+### v1.2.0 (December 2024)
+- 🔊 **Audio Preprocessing** - Automatic volume normalization for quiet recordings
+- 📈 **Better Transcription Accuracy** - Improved results for low-volume audio
 
 ### v1.1.0 (December 2024)
 - 🌐 **Improved Multilingual Support** - Upgraded from `ggml-tiny.bin` to `ggml-base.bin` model
