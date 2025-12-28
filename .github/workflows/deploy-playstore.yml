@@ -1,0 +1,98 @@
+name: Deploy to Play Store
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.3.0
+  workflow_dispatch:  # Allows manual trigger from GitHub Actions tab
+    inputs:
+      track:
+        description: 'Play Store track'
+        required: true
+        default: 'internal'
+        type: choice
+        options:
+          - internal
+          - alpha
+          - beta
+          - production
+
+env:
+  JAVA_VERSION: '17'
+  ANDROID_SDK_VERSION: '34'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive  # For whisper.cpp submodule
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android_app/release.keystore
+
+      - name: Create keystore.properties
+        run: |
+          cat > android_app/keystore.properties << EOF
+          storeFile=release.keystore
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x android_app/gradlew
+
+      - name: Build Release AAB
+        working-directory: android_app
+        run: ./gradlew bundleRelease
+
+      - name: Decode Play Store Credentials
+        run: |
+          echo "${{ secrets.PLAY_STORE_CREDENTIALS }}" | base64 --decode > play-store-credentials.json
+
+      - name: Upload to Play Store
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: play-store-credentials.json
+          packageName: com.zarabandajose.offlineaudionotes
+          releaseFiles: android_app/app/build/outputs/bundle/release/app-release.aab
+          track: ${{ github.event.inputs.track || 'internal' }}
+          status: completed
+
+      - name: Upload AAB as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: android_app/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: |
+          rm -f play-store-credentials.json
+          rm -f android_app/release.keystore
+          rm -f android_app/keystore.properties

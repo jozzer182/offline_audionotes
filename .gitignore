@@ -109,3 +109,9 @@ models/
 
 # Test outputs
 test-results/
+
+# ===== Google Cloud / Play Store =====
+# Service account credentials - NEVER commit these
+lateral-academy-281712-62a05fd6fcae.json
+*-service-account.json
+*credentials*.json
