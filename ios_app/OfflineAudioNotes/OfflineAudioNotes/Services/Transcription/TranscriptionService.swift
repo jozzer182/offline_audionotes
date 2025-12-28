@@ -53,7 +53,7 @@ class TranscriptionService {
     
     // Direct path transcription (for Coordinator)
     func transcribe(audioPath: String) async throws -> String {
-        return try await transcribeInternal(audioPath: audioPath)
+        return try await transcribeInternal(audioPath: audioPath, language: "auto")
     }
 
     // Main Transcription Logic
@@ -67,7 +67,7 @@ class TranscriptionService {
                 note.lastTranscriptionError = nil
             }
             
-            let transcript = try await transcribeInternal(audioPath: audioPath)
+            let transcript = try await transcribeInternal(audioPath: audioPath, language: "auto")
             
             // Update Note
             await MainActor.run {
@@ -89,7 +89,7 @@ class TranscriptionService {
         }
     }
     
-    private func transcribeInternal(audioPath: String) async throws -> String {
+    private func transcribeInternal(audioPath: String, language: String) async throws -> String {
         try await ensureModelLoaded()
         
         guard let bridge = self.bridge else {
@@ -108,14 +108,14 @@ class TranscriptionService {
              throw TranscriptionError.audioFileNotFound
         }
         
-        print("Transcribing: \(fullAudioUrl.path)")
+        print("Transcribing: \(fullAudioUrl.path) with language: \(language)")
         
         // Wrap in cancellable task
         let task = Task.detached(priority: .userInitiated) {
             // Check cancellation before
             if Task.isCancelled { throw CancellationError() }
             
-            let result = bridge.transcribeAudio(atPath: fullAudioUrl.path)
+            let result = bridge.transcribeAudio(atPath: fullAudioUrl.path, language: language)
             
             // Check cancellation after (Soft Cancel)
             if Task.isCancelled { throw CancellationError() }

@@ -76,6 +76,44 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/compose_audio_player" />
 
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_language"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_transcript"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_lang_auto"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_auto" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_lang_es"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_force_spanish" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_lang_en"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_force_english" />
+
+        </com.google.android.material.chip.ChipGroup>
+
         <ImageButton
             android:id="@+id/btn_share_text"
             android:layout_width="40dp"
@@ -128,7 +166,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/label_transcript">
+            app:layout_constraintTop_toBottomOf="@id/chip_group_language">
 
             <TextView
                 android:id="@+id/text_transcript"
