@@ -11,7 +11,7 @@ on:
       track:
         description: 'Play Store track'
         required: true
-        default: 'internal'
+        default: 'alpha'
         type: choice
         options:
           - internal
@@ -150,13 +150,13 @@ jobs:
           echo "${{ secrets.PLAY_STORE_CREDENTIALS }}" | base64 --decode > play-store-credentials.json
           echo "✅ Play Store credentials decoded"
 
-      - name: Upload to Play Store (${{ github.event.inputs.track || 'internal' }} track)
+      - name: Upload to Play Store (${{ github.event.inputs.track || 'alpha' }} track)
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: play-store-credentials.json
           packageName: com.zarabandajose.offlineaudionotes
           releaseFiles: app-release.aab
-          track: ${{ github.event.inputs.track || 'internal' }}
+          track: ${{ github.event.inputs.track || 'alpha' }}
           status: completed
 
       - name: Cleanup sensitive files
