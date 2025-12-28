@@ -19,19 +19,48 @@ on:
 
 env:
   JAVA_VERSION: '17'
-  ANDROID_SDK_VERSION: '34'
 
 jobs:
-  build-and-deploy:
+  # ═══════════════════════════════════════════════════════════════
+  # Job 1: Setup and prepare environment
+  # ═══════════════════════════════════════════════════════════════
+  setup:
+    name: 🔧 Setup Environment
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          submodules: recursive  # For whisper.cpp submodule
+          submodules: recursive
 
-      - name: Set up JDK
+      - name: Validate secrets
+        run: |
+          if [ -z "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            echo "❌ KEYSTORE_BASE64 secret is missing!"
+            exit 1
+          fi
+          if [ -z "${{ secrets.PLAY_STORE_CREDENTIALS }}" ]; then
+            echo "❌ PLAY_STORE_CREDENTIALS secret is missing!"
+            exit 1
+          fi
+          echo "✅ All required secrets are present"
+
+  # ═══════════════════════════════════════════════════════════════
+  # Job 2: Build the Android App Bundle
+  # ═══════════════════════════════════════════════════════════════
+  build:
+    name: 🏗️ Build Release AAB
+    runs-on: ubuntu-latest
+    needs: setup
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
@@ -52,7 +81,8 @@ jobs:
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android_app/release.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android_app/app/release.keystore
+          echo "✅ Keystore decoded successfully"
 
       - name: Create keystore.properties
         run: |
@@ -62,37 +92,88 @@ jobs:
           keyAlias=${{ secrets.KEY_ALIAS }}
           keyPassword=${{ secrets.KEY_PASSWORD }}
           EOF
+          echo "✅ keystore.properties created"
 
       - name: Grant execute permission for gradlew
         run: chmod +x android_app/gradlew
 
       - name: Build Release AAB
         working-directory: android_app
-        run: ./gradlew bundleRelease
+        run: |
+          echo "🚀 Starting build..."
+          ./gradlew bundleRelease
+          echo "✅ Build completed successfully!"
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab
+          path: android_app/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 7
+
+  # ═══════════════════════════════════════════════════════════════
+  # Job 3: Deploy to Google Play Store
+  # ═══════════════════════════════════════════════════════════════
+  deploy:
+    name: 🚀 Deploy to Play Store
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-aab
+          path: ./
+
+      - name: Verify AAB exists
+        run: |
+          if [ -f "app-release.aab" ]; then
+            echo "✅ AAB file found: $(ls -lh app-release.aab)"
+          else
+            echo "❌ AAB file not found!"
+            exit 1
+          fi
 
       - name: Decode Play Store Credentials
         run: |
           echo "${{ secrets.PLAY_STORE_CREDENTIALS }}" | base64 --decode > play-store-credentials.json
+          echo "✅ Play Store credentials decoded"
 
-      - name: Upload to Play Store
+      - name: Upload to Play Store (${{ github.event.inputs.track || 'internal' }} track)
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: play-store-credentials.json
           packageName: com.zarabandajose.offlineaudionotes
-          releaseFiles: android_app/app/build/outputs/bundle/release/app-release.aab
+          releaseFiles: app-release.aab
           track: ${{ github.event.inputs.track || 'internal' }}
           status: completed
-
-      - name: Upload AAB as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release
-          path: android_app/app/build/outputs/bundle/release/app-release.aab
-          retention-days: 30
 
       - name: Cleanup sensitive files
         if: always()
         run: |
           rm -f play-store-credentials.json
-          rm -f android_app/release.keystore
-          rm -f android_app/keystore.properties
+          echo "🧹 Cleanup completed"
+
+  # ═══════════════════════════════════════════════════════════════
+  # Job 4: Notify completion
+  # ═══════════════════════════════════════════════════════════════
+  notify:
+    name: ✅ Deployment Complete
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: success()
+    
+    steps:
+      - name: Success notification
+        run: |
+          echo "🎉 =================================="
+          echo "🎉 DEPLOYMENT SUCCESSFUL!"
+          echo "🎉 =================================="
+          echo ""
+          echo "📱 App: Offline Audio Notes"
+          echo "📍 Track: ${{ github.event.inputs.track || 'internal' }}"
+          echo "🔖 Ref: ${{ github.ref }}"
+          echo "👤 Triggered by: ${{ github.actor }}"
+          echo ""
+          echo "Check your Google Play Console for the new release!"
