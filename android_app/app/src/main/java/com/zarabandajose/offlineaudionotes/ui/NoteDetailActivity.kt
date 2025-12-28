@@ -49,7 +49,7 @@ class NoteDetailActivity : AppCompatActivity() {
     private var isRecording = false
     private var currentAudioPath: String? = null
     private var currentDurationMillis: Long = 0
-    private var currentLanguage: String = "en"
+    private var currentLanguage: String = "auto"
 
     // Compose state for WavyAudioPlayer
     private val isPlayingState = mutableStateOf(false)
@@ -157,6 +157,34 @@ class NoteDetailActivity : AppCompatActivity() {
         binding.btnShareText.setOnClickListener {
             shareText()
         }
+
+        binding.chipGroupLanguage.setOnCheckedChangeListener { _, checkedId ->
+            currentLanguage = when (checkedId) {
+                R.id.chip_lang_es -> "es"
+                R.id.chip_lang_en -> "en"
+                else -> "auto"
+            }
+            // Update note if exists
+            currentNote?.let { note ->
+                if (note.language != currentLanguage) {
+                     updateNoteLanguage(note, currentLanguage)
+                }
+            }
+        }
+    }
+
+    private fun updateNoteLanguage(note: Note, newLanguage: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+             val updatedNote = note.copy(language = newLanguage)
+             NotesRepositoryProvider.repository.updateNote(updatedNote)
+
+             // Trigger re-transcription if audio exists
+             if (updatedNote.audioPath.isNotBlank() && File(updatedNote.audioPath).exists()) {
+                 withContext(Dispatchers.Main) {
+                     enqueueTranscriptionForCurrentNote()
+                 }
+             }
+        }
     }
 
     private fun observeNote() {
@@ -233,8 +261,15 @@ class NoteDetailActivity : AppCompatActivity() {
 
         binding.labelTranscript.visibility = View.VISIBLE
         binding.scrollTranscript.visibility = View.VISIBLE
+        binding.chipGroupLanguage.visibility = View.VISIBLE
         binding.textNoAudio.visibility = View.GONE
+
         currentLanguage = note.language
+        when (currentLanguage) {
+            "es" -> binding.chipGroupLanguage.check(R.id.chip_lang_es)
+            "en" -> binding.chipGroupLanguage.check(R.id.chip_lang_en)
+            else -> binding.chipGroupLanguage.check(R.id.chip_lang_auto)
+        }
         
         updateTranscriptionStatusUI(note)
     }
@@ -291,10 +326,15 @@ class NoteDetailActivity : AppCompatActivity() {
         binding.cardRecordingControls.visibility = View.VISIBLE
         binding.labelTranscript.visibility = View.GONE
         binding.scrollTranscript.visibility = View.GONE
+        // Allow selecting language before recording
+        binding.chipGroupLanguage.visibility = View.VISIBLE
         binding.textNoAudio.visibility = View.GONE
         binding.btnTranscribe.visibility = View.GONE
         binding.textRecordingTime.text = "00:00"
         binding.textRecordingStatus.text = getString(R.string.tap_to_record)
+
+        currentLanguage = "auto"
+        binding.chipGroupLanguage.check(R.id.chip_lang_auto)
     }
 
     private fun toggleRecording() {
@@ -380,7 +420,7 @@ class NoteDetailActivity : AppCompatActivity() {
                     transcript = getString(R.string.transcript_pending),
                     audioPath = audioPath,
                     durationMillis = durationMillis,
-                    language = "en"
+                    language = currentLanguage
                 )
                 val savedNote = NotesRepositoryProvider.repository.saveNote(newNote)
                 withContext(Dispatchers.Main) {
@@ -470,6 +510,7 @@ class NoteDetailActivity : AppCompatActivity() {
         binding.composeAudioPlayer.visibility = View.VISIBLE
         binding.labelTranscript.visibility = View.VISIBLE
         binding.scrollTranscript.visibility = View.VISIBLE
+        binding.chipGroupLanguage.visibility = View.VISIBLE
         binding.textTranscript.text = getString(R.string.transcript_pending)
         
         totalDurationState.longValue = currentDurationMillis

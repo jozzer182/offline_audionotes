@@ -54,6 +54,10 @@
     <string name="share_text">Share text</string>
     <string name="share_note">Share note</string>
     <string name="no_text_to_share">No text to share</string>
+    <string name="select_language">Select Language</string>
+    <string name="language_auto">Auto Detect</string>
+    <string name="language_force_spanish">Force Spanish</string>
+    <string name="language_force_english">Force English</string>
     
     <!-- Settings -->
     <string name="settings">Settings</string>

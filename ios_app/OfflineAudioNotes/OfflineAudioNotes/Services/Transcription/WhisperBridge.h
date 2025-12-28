@@ -8,7 +8,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable instancetype)initWithModelPath:(NSString *)modelPath;
 
 // Transcribe audio file at path, returning text
-- (nullable NSString *)transcribeAudioAtPath:(NSString *)audioPath;
+// language can be "auto", "en", "es", etc.
+- (nullable NSString *)transcribeAudioAtPath:(NSString *)audioPath language:(NSString *)language;
 
 @end
 

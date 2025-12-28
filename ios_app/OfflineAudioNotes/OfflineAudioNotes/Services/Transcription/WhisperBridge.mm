@@ -28,7 +28,7 @@
   }
 }
 
-- (nullable NSString *)transcribeAudioAtPath:(NSString *)audioPath {
+- (nullable NSString *)transcribeAudioAtPath:(NSString *)audioPath language:(NSString *)language {
   if (!_ctx)
     return nil;
 
@@ -67,7 +67,13 @@
   wparams.print_realtime = false;
   wparams.print_timestamps = false;
   wparams.translate = false;
-  wparams.language = "en"; // Default to english, or passed parameter
+
+  if ([language isEqualToString:@"auto"]) {
+      wparams.language = "auto";
+  } else {
+      wparams.language = [language UTF8String];
+  }
+
   wparams.n_threads = 4;
 
   if (whisper_full(_ctx, wparams, pcmf32.data(), pcmf32.size()) != 0) {
