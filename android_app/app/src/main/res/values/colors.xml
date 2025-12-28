@@ -18,4 +18,11 @@
     <!-- Text colors -->
     <color name="text_primary">#FF212121</color>
     <color name="text_secondary">#FF757575</color>
+    
+    <!-- Settings UI colors -->
+    <color name="accent_primary">#FF6200EE</color>
+    <color name="accent_secondary">#2E7D32</color>
+    <color name="error">#D32F2F</color>
+    <color name="background_dark">#FAFAFA</color>
+    <color name="surface_dark">#FFFFFF</color>
 </resources>
